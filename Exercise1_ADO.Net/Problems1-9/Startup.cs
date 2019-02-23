@@ -9,64 +9,166 @@ namespace Problem1
     {
         public static void Main(string[] args)
         {
+
             using (SqlConnection connection = new SqlConnection(Configuration.ConnectionString))
             {
                 connection.Open();
 
                 string databaseName = "MinionsDB";
 
-                bool databaseExists = CheckDatabaseExists(connection, databaseName);
-
-                if (databaseExists == false)
-                {   //1. Initial Setup 
-                    string commandText = $"CREATE DATABASE {databaseName}";
-
-                    ExecuteNonQuery(connection, commandText);
-
-                    UseDatabase(connection, databaseName);
-
-                    CreateTables(connection);
-
-                    InsertInitialValuesIntoTables(connection);
-                }
+                //1. Initial setup
+                Console.WriteLine("Task 1. Init database");
+                Task1(connection, databaseName);
 
                 UseDatabase(connection, databaseName);
 
                 // 2. Villain Names
-                // Write a program that prints on the console all villains’ names and their
-                // number of minions of those who have more than 3 minions ordered descending 
-                // by number of minions.
-
-                 GetVillainMinionsCount(connection);
-
+                Console.WriteLine("Task 2. Print villain names and number of minions ");
+                Task2(connection);
 
                 //3. Minion Names
-                // Write a program that prints on the console all minion names and age for a given
-                //    villain id, ordered by name alphabetically.
-                // If there is no villain with the given ID, print
-                // "No villain with ID <VillainId> exists in the database.".
-                // If the selected villain has no minions, print "(no minions)" on the second row.
-
+                Console.WriteLine("Task 3. Minion Names, Enter villain id:");   
                 Task3(connection);
 
-
                 // 4. Add Minion
-                // input fromat: Minion: <Name> <Age> <TownName>
-
-                   Task4(connection);
+                Console.WriteLine("Task 4. Add Minion, required data:");
+                Console.WriteLine("Minion: Bob 14 Berlin");
+                Console.WriteLine("Villain: Gru");
+                Console.WriteLine("Enter data:");
+                Task4(connection);
 
                 // 5. Change Town Names  Casing
-
+                Console.WriteLine("Task 5. Change Town Names  Casing");
+                Console.WriteLine("Enter Country:");
                 Task5(connection);
 
                 //6. Remove Villain
-
+                Console.WriteLine("Task 6. Remove Villain, Enter villain id: ");
                 Task6(connection);
 
                 //7. Print All Minion Names
-
+                Console.WriteLine("Task 7. Print All Minion Names");
                 Task7(connection);
-                
+
+                //8. Increase Minion Age
+                Console.WriteLine("Task 8. Increase Minion Age, Enter <startId> <endId>:");
+                Task8(connection);
+
+                //9. Increase Age Stored Procedure
+                Console.WriteLine("Task 9.Increase Age Stored Procedure, Enter minion id: ");
+                Task9(connection);
+                ;
+            }
+        }
+
+        private static void Task9(SqlConnection connection)
+        {
+            int minionId = int.Parse(Console.ReadLine());
+
+            string commandText = $"EXEC usp_GetOlder @minionId";
+
+            using (SqlCommand cmd = new SqlCommand(commandText, connection))
+            {
+                cmd.Parameters.AddWithValue("@minionId", minionId);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            PrintMinion(connection, minionId);
+        }
+
+        private static void Task1(SqlConnection connection, string databaseName)
+        {
+            bool databaseExists = CheckDatabaseExists(connection, databaseName);
+
+            if (databaseExists == false)
+            {   //1. Initial Setup 
+                string commandText = $"CREATE DATABASE {databaseName}";
+
+                ExecuteNonQuery(connection, commandText);
+
+                UseDatabase(connection, databaseName);
+
+                CreateTables(connection);
+
+                InsertInitialValuesIntoTables(connection);
+            }
+        }
+
+        private static void Task8(SqlConnection connection)
+        {
+            int[] minionIds = Console.ReadLine().Split().Select(int.Parse).ToArray();
+
+            for (int i = minionIds[0]; i < minionIds[1]; i++)
+            {
+                ;
+                IncreaseMinionAge(connection, i, 1);
+
+                MakeMinionNameTitleCase(connection, i);
+            }
+
+            PrintMinions(connection);
+        }
+
+        private static void PrintMinions(SqlConnection connection)
+        {
+            string commandText = "SELECT Name, Age FROM Minions";
+
+            using (SqlCommand cmd = new SqlCommand(commandText, connection))
+            {
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"{reader["Name"]} {reader["Age"]}");
+                    }
+                }
+
+            }
+        }
+
+        private static void PrintMinion(SqlConnection connection, int minionId)
+        {
+            string commandText = "SELECT Name, Age FROM Minions WHERE Id = @minionId";
+
+            using (SqlCommand cmd = new SqlCommand(commandText, connection))
+            {
+                cmd.Parameters.AddWithValue("@minionId", minionId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"{reader["Name"]} - {reader["Age"]} years old");
+                    }
+                }
+
+            }
+        }
+
+        private static void MakeMinionNameTitleCase(SqlConnection connection, int minionId)
+        {
+            string commandText = $@"UPDATE Minions SET Name =  
+        UPPER(LEFT(Name,1))+SUBSTRING(Name, 2, LEN(Name)) WHERE Id = @minionId";
+
+            using (SqlCommand cmd = new SqlCommand(commandText, connection))
+            {
+                cmd.Parameters.AddWithValue("@minionId", minionId);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private static void IncreaseMinionAge(SqlConnection connection, int minionId, int ageModifier)
+        {
+            string commandText = $"UPDATE Minions SET Age += {ageModifier} WHERE Id = @minionId";
+
+            using (SqlCommand cmd = new SqlCommand(commandText, connection))
+            {
+                cmd.Parameters.AddWithValue("@minionId", minionId);
+
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -105,8 +207,6 @@ namespace Problem1
                     }
                 }
             }
-
-
             return minions;
         }
 
@@ -228,8 +328,7 @@ namespace Problem1
                 townId = GetTownByName(connection, minionTown);
                 Console.WriteLine($"Town {minionTown} was added to the database.");
             }
-                            ;
-
+                            
             int? villainId = GetVillainByName(connection, villainName);
 
             if (villainId == null)
@@ -424,7 +523,7 @@ namespace Problem1
 
         }
 
-        private static void GetVillainMinionsCount(SqlConnection connection)
+        private static void Task2(SqlConnection connection)
         {
 
             string commandText = @"SELECT 
