@@ -37,16 +37,7 @@ namespace EFDemoDBFirst.Data
 
             modelBuilder.Entity<Addresses>(entity =>
             {
-                entity.HasKey(e => e.AddressId);
-
-                entity.Property(e => e.AddressId).HasColumnName("AddressID");
-
-                entity.Property(e => e.AddressText)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.TownId).HasColumnName("TownID");
+                entity.Property(e => e.AddressText).IsUnicode(false);
 
                 entity.HasOne(d => d.Town)
                     .WithMany(p => p.Addresses)
@@ -56,16 +47,7 @@ namespace EFDemoDBFirst.Data
 
             modelBuilder.Entity<Departments>(entity =>
             {
-                entity.HasKey(e => e.DepartmentId);
-
-                entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
-
-                entity.Property(e => e.ManagerId).HasColumnName("ManagerID");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Name).IsUnicode(false);
 
                 entity.HasOne(d => d.Manager)
                     .WithMany(p => p.Departments)
@@ -76,38 +58,13 @@ namespace EFDemoDBFirst.Data
 
             modelBuilder.Entity<Employees>(entity =>
             {
-                entity.HasKey(e => e.EmployeeId);
+                entity.Property(e => e.FirstName).IsUnicode(false);
 
-                entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
+                entity.Property(e => e.JobTitle).IsUnicode(false);
 
-                entity.Property(e => e.AddressId).HasColumnName("AddressID");
+                entity.Property(e => e.LastName).IsUnicode(false);
 
-                entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
-
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.HireDate).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.JobTitle)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ManagerId).HasColumnName("ManagerID");
-
-                entity.Property(e => e.MiddleName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Salary).HasColumnType("money");
+                entity.Property(e => e.MiddleName).IsUnicode(false);
 
                 entity.HasOne(d => d.Address)
                     .WithMany(p => p.Employees)
@@ -130,10 +87,6 @@ namespace EFDemoDBFirst.Data
             {
                 entity.HasKey(e => new { e.EmployeeId, e.ProjectId });
 
-                entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
-
-                entity.Property(e => e.ProjectId).HasColumnName("ProjectID");
-
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.EmployeesProjects)
                     .HasForeignKey(d => d.EmployeeId)
@@ -149,32 +102,12 @@ namespace EFDemoDBFirst.Data
 
             modelBuilder.Entity<Projects>(entity =>
             {
-                entity.HasKey(e => e.ProjectId);
-
-                entity.Property(e => e.ProjectId).HasColumnName("ProjectID");
-
-                entity.Property(e => e.Description).HasColumnType("ntext");
-
-                entity.Property(e => e.EndDate).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.StartDate).HasColumnType("smalldatetime");
+                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<Towns>(entity =>
             {
-                entity.HasKey(e => e.TownId);
-
-                entity.Property(e => e.TownId).HasColumnName("TownID");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Name).IsUnicode(false);
             });
         }
     }
