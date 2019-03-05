@@ -1,0 +1,6 @@
+microsoft.entityframeworkCore
+microsoft.entityframeworkCore.SqlServer
+microsoft.entityframeworkCore.SqlServer.Design
+microsoft.entityframeworkCore.tools
+
+microsoft.extensions.logging
