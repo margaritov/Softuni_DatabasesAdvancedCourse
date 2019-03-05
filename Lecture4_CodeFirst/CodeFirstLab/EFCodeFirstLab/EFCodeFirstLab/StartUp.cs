@@ -5,6 +5,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Console;
     using System;
+    using System.Linq;
 
     public class StartUp
     {
@@ -26,6 +27,10 @@
                 .UseLoggerFactory(SqlCommandLoggerFactory)
                 .EnableSensitiveDataLogging();
 
+            using (var context = new BlogDbContext())
+            {
+                var user = context.Users.FirstOrDefault(); 
+            }
         }
     }
 }
