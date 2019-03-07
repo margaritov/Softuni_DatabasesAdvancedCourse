@@ -18,9 +18,18 @@ namespace P01_HospitalDatabase.Data.Models
 
         public ICollection<Visitation> Visitations { get; set; }
 
+        public ICollection<Diagnose> Diagnoses { get; set; }
+
+        public ICollection<PatientMedicament> Prescriptions { get; set; }
+
+
         public Patient()
         {
             this.Visitations = new HashSet<Visitation>();
+
+            this.Diagnoses = new HashSet<Diagnose>();
+
+            this.Prescriptions = new HashSet<PatientMedicament>();
         }
     }
 }
