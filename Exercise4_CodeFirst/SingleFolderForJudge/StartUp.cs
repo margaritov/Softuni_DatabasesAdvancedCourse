@@ -5,11 +5,13 @@
 
     public class StartUp
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
+            
+            //  db.Database.EnsureCreated();
             using (var db = new HospitalContext())
             {
-
+                ;
             }
         }
     }

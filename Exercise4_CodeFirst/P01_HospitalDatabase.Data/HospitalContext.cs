@@ -44,7 +44,17 @@
                 .Entity<PatientMedicament>()
                 .HasKey(pm => new { pm.PatientId, pm.MedicamentId });
 
-             
+            modelBuilder
+                .Entity<PatientMedicament>()
+                .HasOne(pm => pm.Patient)
+                .WithMany(p => p.Prescriptions)
+                .HasForeignKey(pm => pm.PatientId);
+
+            modelBuilder
+                .Entity<PatientMedicament>()
+                .HasOne(pm => pm.Medicament)
+                .WithMany(m => m.Prescriptions)
+                .HasForeignKey(m => m.MedicamentId);             
         }
 
         private void ConfigureMedicamentEntity(ModelBuilder modelBuilder)
