@@ -17,8 +17,6 @@
 
         public DbSet<PatientMedicament> PatientsMedicaments { get; set; }
 
-        public DbSet<Doctor> Doctors { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(Config.connectionString);
@@ -35,34 +33,6 @@
             ConfigureMedicamentEntity(modelBuilder);
 
             ConfigurePatientMedicamentEntity(modelBuilder);
-
-            ConfigureDoctorEntity(modelBuilder);
-        }
-
-        private void ConfigureDoctorEntity(ModelBuilder modelBuilder)
-        {
-            modelBuilder
-                .Entity<Doctor>()
-                .HasKey(d => d.DoctorId);
-
-            modelBuilder
-                .Entity<Doctor>()
-                .HasMany(d => d.Visitations)
-                .WithOne(v => v.Doctor);
-
-            modelBuilder
-                .Entity<Doctor>()
-                .Property(d => d.Name)
-                .HasMaxLength(100)
-                .IsUnicode();
-
-            modelBuilder
-                .Entity<Doctor>()
-                .Property(d => d.Specialty)
-                .HasMaxLength(100)
-                .IsUnicode();
-
-           
         }
 
         private void ConfigurePatientMedicamentEntity(ModelBuilder modelBuilder)
@@ -81,7 +51,7 @@
                 .Entity<PatientMedicament>()
                 .HasOne(pm => pm.Medicament)
                 .WithMany(m => m.Prescriptions)
-                .HasForeignKey(m => m.MedicamentId);
+                .HasForeignKey(m => m.MedicamentId);             
         }
 
         private void ConfigureMedicamentEntity(ModelBuilder modelBuilder)
