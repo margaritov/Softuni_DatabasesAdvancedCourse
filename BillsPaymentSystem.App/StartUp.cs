@@ -1,12 +1,20 @@
-﻿using System;
+﻿
 
 namespace BillsPaymentSystem.App
 {
-    class StartUp
+    using BillsPaymentSystem.Data;
+    using System;
+
+    public class StartUp
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (BillsPaymentSystemContext context = new BillsPaymentSystemContext())
+            {
+                DbInitializer.Seed(context);
+
+            }
+
         }
     }
 }

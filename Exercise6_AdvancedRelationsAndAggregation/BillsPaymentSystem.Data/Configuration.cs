@@ -3,6 +3,6 @@
     public class Configuration
     {
         internal static string ConnectionString =>
-            "Server=localhost;Database=PaymentsSystem;Integrated Secutity=True";
+            "Server=localhost;Database=PaymentsSystem;Integrated Security=True";
     }
 }
