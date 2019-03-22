@@ -1,43 +1,77 @@
 ﻿namespace P01_StudentSystem.Data
 {
-    using System;
     using Microsoft.EntityFrameworkCore;
     using P01_StudentSystem.Data.Models;
 
     public class StudentSystemContext : DbContext
-    {
+    { 
 
-        DbSet<Student> Students { get; set; }
+        public DbSet<Student> Students { get; set; }
 
-        DbSet<Course> Courses { get; set; }
+        public DbSet<Course> Courses { get; set; }
 
-        DbSet<Resource> Resources { get; set; }
+        public DbSet<Resource> Resources { get; set; }
 
-        DbSet<Homework> HomeworkSubmissions { get; set; }
+        public DbSet<Homework> HomeworkSubmissions { get; set; }
 
+        public DbSet<StudentCourse> StudentCourses { get; set; }
+
+        public StudentSystemContext(DbContextOptions options)
+            : base(options)
+        {
+
+        }
+
+        public StudentSystemContext()
+        {
+
+        }
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (optionsBuilder.IsConfigured == false)
+            {
+                optionsBuilder.UseSqlServer(Config.connectionString);
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ConfigureStudentEntity(modelBuilder);
+            OnConfiguringStudent(modelBuilder);
 
-            ConfgiureCourseEntity(modelBuilder);
+            OnConfgiuringCourse(modelBuilder);
 
-            ConfigureResourceEntity(modelBuilder);
+            OnConfgiuringResource(modelBuilder);
 
-            ConfigureHomeworkEntity(modelBuilder);
+            OnConfiguringHomework(modelBuilder);
 
-            ConfigureStudentCourseEntity(modelBuilder);
+            OnConfiguringStudentCourse(modelBuilder);
         }
 
-        private void ConfigureStudentCourseEntity(ModelBuilder modelBuilder)
+        private void OnConfiguringStudentCourse(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            modelBuilder
+                .Entity<StudentCourse>()
+                .HasKey(sc => new { sc.StudentId, sc.CourseId });
+
+            modelBuilder
+                .Entity<StudentCourse>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.CourseEnrollments)
+                .HasForeignKey(e => e.StudentId);
+
+            modelBuilder
+                .Entity<StudentCourse>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.StudentsEnrolled)
+                .HasForeignKey(e => e.CourseId);
         }
 
-        private void ConfigureHomeworkEntity(ModelBuilder modelBuilder)
+        private void OnConfiguringHomework(ModelBuilder modelBuilder)
         {
-            modelBuilder                           
-                .Entity<Homework>()                           
+            modelBuilder
+                .Entity<Homework>()
                 .HasKey(c => c.HomeworkId);
 
             modelBuilder
@@ -53,16 +87,16 @@
             modelBuilder
                 .Entity<Homework>()
                 .HasOne<Course>(h => h.Course)
-                .WithMany(c => c.HomeworkSubmissions);    
+                .WithMany(c => c.HomeworkSubmissions);
             //todo content type - enum and submission time?
 
 
         }
 
-        private void ConfigureResourceEntity(ModelBuilder modelBuilder)
+        private void OnConfgiuringResource(ModelBuilder modelBuilder)
         {
-            modelBuilder                           
-                .Entity<Resource>()                            
+            modelBuilder
+                .Entity<Resource>()
                 .HasKey(r => r.ResourceId);
 
             modelBuilder
@@ -79,9 +113,14 @@
                .Entity<Resource>()
                .Property(r => r.Url)
                .IsUnicode(false);
+
+            modelBuilder
+                .Entity<Resource>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.Resources);
         }
 
-        private void ConfgiureCourseEntity(ModelBuilder modelBuilder)
+        private void OnConfgiuringCourse(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Entity<Course>()
@@ -98,7 +137,7 @@
                .IsRequired(false);
         }
 
-        private void ConfigureStudentEntity(ModelBuilder modelBuilder)
+        private void OnConfiguringStudent(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Entity<Student>()

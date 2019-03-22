@@ -8,11 +8,8 @@
 
         public int CourseId { get; set; }
 
-
-        [ForeignKey(nameof(StudentId))]
         public Student Student { get; set; }
 
-        [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; }
     }
 }
