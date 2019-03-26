@@ -7,6 +7,10 @@
 
     public class Employee
     {
+        public Employee()
+        {
+            this.ManagedEmployees = new List<Employee>();
+        }
 
         public int Id { get; set; }
 
@@ -23,5 +27,9 @@
 
         public string Address { get; set; }
 
+        public int? ManagerId { get; set; }
+        public Employee Manager { get; set; }
+
+        public List<Employee> ManagedEmployees { get; set; }
     }
 }
