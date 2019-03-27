@@ -30,9 +30,26 @@
                 .Where(e => e.Birthday.Value.Year < DateTime.Now.Year - age)
                 .ToList();
 
-            var employeeList = this.mapper.CreateMappedObject<EmployeeListDto>(employees);
-            ;
             StringBuilder sb = new StringBuilder();
+
+            List<EmployeeListDto> employeesList = new List<EmployeeListDto>();
+
+
+            // TODO FIX:
+            //foreach (var employee in employees)
+            //{
+            //    var employeeListDto = this.mapper.CreateMappedObject<EmployeeListDto>(employee);
+
+            //    employeesList.Add(employeeListDto);
+            //    string managerName = employeeListDto.Manager == null ?
+            //        "[no manager]" : employeeListDto.Manager.LastName;
+            //    sb.AppendLine($"{employeeListDto.FirstName} {employeeListDto.LastName} -" +
+            //        $" ${employeeListDto.Salary} - Manager: {managerName }");
+
+            //}
+
+            ;
+
 
             return sb.ToString();
         }
