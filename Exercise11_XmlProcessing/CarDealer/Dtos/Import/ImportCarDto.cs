@@ -12,7 +12,7 @@
         public string Model { get; set; }
 
         [XmlElement("TraveledDistance")]
-        public int TraveledDistance { get; set; }
+        public int TravelledDistance { get; set; }
 
         [XmlArray("parts")]
         public ImportCarPartDto[] PartCars { get; set; }
