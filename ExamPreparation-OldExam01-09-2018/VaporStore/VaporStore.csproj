@@ -6,24 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180702165948_Initial.cs" />
-    <Compile Remove="Migrations\20180703123523_Initial.cs" />
-    <Compile Remove="Migrations\20180703123707_initial.cs" />
+    <Compile Remove="Data\Models\NewFolder\**" />
+    <EmbeddedResource Remove="Data\Models\NewFolder\**" />
+    <None Remove="Data\Models\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ImportResults\" />
-    <Folder Include="ExportResults\" />
+    <Folder Include="DataProcessor\Export\" />
   </ItemGroup>
 
 </Project>
